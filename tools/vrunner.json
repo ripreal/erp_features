@@ -1,0 +1,15 @@
+{
+    "$schema": "https://raw.githubusercontent.com/silverbulleters/vanessa-runner/develop/vanessa-runner-schema.json",
+    "default": {
+        "--db-user": "",
+        "--db-pwd": "",
+        "--ordinaryapp": "0",
+        "--v8version": ""
+    },
+    "vanessa": {
+        "--vanessasettings": "tools/VBParams.json",
+        "--workspace": ".",
+        "--pathvanessa": ".",
+        "--additional": "/DisplayAllFunctions /L ru"
+    }
+}
