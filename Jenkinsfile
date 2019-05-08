@@ -5,7 +5,8 @@ import io.libs.Utils
 
 def sqlUtils = new SqlUtils()
 def backupTasks = [:]
-def dropdbTasks = [:]
+def restoreTasks = [:]
+def dropDbTasks = [:]
 def createDbTasks = [:]
 def runHandlers1cTasks = [:]
 def updateDbTasks = [:]
@@ -47,6 +48,7 @@ pipeline {
                         serverSql = serverSql.isEmpty() ? "localhost" : serverSql
                         server1cPort = server1cPort.isEmpty() ? "1551" : server1cPort
                         sqlUser = sqlUser.isEmpty() ? "sa" : sqlUser
+                        testbase = null
 
                         templatebasesList = templatebases.toLowerCase().replaceAll("\\s", "").split(",")
                         storages1cPathList = storages1cPath.toLowerCase().replaceAll("\\s", "").split(",")
@@ -135,9 +137,11 @@ pipeline {
                 timestamps {
                     script {
 
-                        if (testbase == null) {
+                        if (templatebasesList.size() == 0) {
                             return
                         }
+
+                        def utils = new Utils()
 
                         utils.cmd("""runner vanessa --settings tools/vrunner.json 
                             --v8version ${platform1c} 
