@@ -13,18 +13,18 @@ def updateDbTasks = [:]
 pipeline {
 
     parameters {
-        string(defaultValue: "localhost", description: 'Сервер 1С', name: 'server1c')
-        string(defaultValue: "", description: 'Платформа 1С, например 8.3.12.1685. Если пустой - то будет использована последняя версия, среди установленных', name: 'platform1c')
-        string(defaultValue: "localhost", description: 'Сервер ms sql', name: 'serverSql')
-        string(defaultValue: "Administrator", description: 'Имя администратора 1С', name: 'admin1cUser')
-        string(defaultValue: "", description: 'Пароль администратора 1С', name: 'admin1cPwd')
-        string(defaultValue: "sa", description: 'Имя sql пользователя', name: 'sqlUser')
-        string(defaultValue: "", description: 'Пароль sql пользователя', name: 'sqlPwd')
-        string(defaultValue: "", description: 'Базы для тестирования, через запятую. Например work_erp,work_upp', name: 'templatebases')
-        string(defaultValue: "", description: 'Хранилища баз для тестирования, через запятую. Количество должно соответсвовать базам для тестирования. Например D:/temp/storage1c/erp,D:/temp/storage1c/upp', name: 'storages1cPath')
-        string(description: 'Имя пользователя хранилищ 1С. Не может быть пустым', name: 'storageUser')
-        string(description: 'Пароль пользователя хранилищ 1с. Не может быть пустым', name: 'storagePwd')
-        string(defaultValue: "master", description: 'Нода дженкинса для запуска', name: 'jenkinsAgent')
+        string(defaultValue: "localhost", description: '1c server hostname', name: 'server1c')
+        string(defaultValue: "", description: 'Platform 1c version, for example 8.3.12.1685. If empty then last version available on host  will be used', name: 'platform1c')
+        string(defaultValue: "localhost", description: 'MS SQL server hostname', name: 'serverSql')
+        string(defaultValue: "Administrator", description: 'Infobase administrator user name', name: 'admin1cUser')
+        string(defaultValue: "", description: 'Infobase administrator 1С password', name: 'admin1cPwd')
+        string(defaultValue: "sa", description: 'MS SQL user name', name: 'sqlUser')
+        string(defaultValue: "", description: 'MS SQL user password', name: 'sqlPwd')
+        string(defaultValue: "", description: 'List of bases for testing via comma. For example work_erp,work_upp', name: 'templatebases')
+        string(defaultValue: "", description: 'Storages 1c mapped with infobases for testing via comma Amount of storages 1c must conform to amount of infobases. For example D:/temp/storage1c/erp,D:/temp/storage1c/upp', name: 'storages1cPath')
+        string(defaultValue: "Администратор", description: 'Storage 1С username. Must be single for every storage', name: 'storageUser')
+        string(description: 'Storage 1c user password. Cannot be empty', name: 'storagePwd')
+        string(defaultValue: "master", description: 'Jenkins node to launch pipeline', name: 'jenkinsAgent')
     }
 
     agent {
@@ -35,12 +35,12 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr:'10'))
     }
     stages {
-        stage("Подготовка параметров") {
+        stage("Preparing environment") {
             steps {
                 timestamps {
                     script {
                         assert storageUser
-                        assert storagePwd
+                        //assert storagePwd
 
                         agentPort = "1551"
                         templatebasesList = templatebases.toLowerCase().replaceAll("\\s", "").split(",")
@@ -51,7 +51,7 @@ pipeline {
                 }
             }
         }
-        stage("Запуск") {
+        stage("Launch") {
             steps {
                 timestamps {
                     script {
@@ -114,7 +114,7 @@ pipeline {
                             )
 
                         }
-                        
+
                         parallel dropDbTasks
                         parallel backupTasks
                         parallel restoreTasks
@@ -125,7 +125,7 @@ pipeline {
                 }
             }
         }
-        stage("Выполнение bdd тестирования") {
+        stage("Executing bdd tests") {
             steps {
                 timestamps {
                     script {
@@ -177,7 +177,7 @@ pipeline {
 def dropDbTask(server1c, agentPort, serverSql, infobase, admin1cUser, admin1cPwd, sqluser, sqlPwd) {
     return {
         timestamps {
-            stage("Удаление тестовой базы ${infobase}") {
+            stage("Deleting base ${infobase} from previous build") {
                 def projectHelpers = new ProjectHelpers()
                 def utils = new Utils()
 
@@ -189,7 +189,7 @@ def dropDbTask(server1c, agentPort, serverSql, infobase, admin1cUser, admin1cPwd
 
 def createDbTask(server1c, serverSql, platform1c, infobase) {
     return {
-        stage("Создание тестовой базы ${infobase}") {
+        stage("Creating new base  ${infobase}") {
             timestamps {
                 projectHelpers = new ProjectHelpers()
                 try {
@@ -204,7 +204,7 @@ def createDbTask(server1c, serverSql, platform1c, infobase) {
 
 def backupTask(serverSql, infobase, backupPath) {
     return {
-        stage("Резервное копирование ${infobase}") {
+        stage("Backup ${infobase}") {
             timestamps {
                 sqlUtils = new SqlUtils()
 
@@ -217,7 +217,7 @@ def backupTask(serverSql, infobase, backupPath) {
 
 def runHandlers1cTask(server1c, infobase, admin1cUser, admin1cPwd) {
     return {
-        stage("Резервное копирование ${infobase}") {
+        stage("Backup ${infobase}") {
             timestamps {
                 projectHelpers = new ProjectHelpers()
                 projectHelpers.unlocking1cBase(projectHelpers.getConnString(server1c, infobase), admin1cUser, admin1cPwd)
@@ -228,7 +228,7 @@ def runHandlers1cTask(server1c, infobase, admin1cUser, admin1cPwd) {
 
 def restoreTask(serverSql, infobase, backupPath) {
     return {
-        stage("Восстановление базы ${infobase}") {
+        stage("Restore from backup ${infobase}") {
             timestamps {
                 sqlUtils = new SqlUtils()
 
