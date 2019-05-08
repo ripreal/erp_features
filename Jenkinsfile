@@ -13,17 +13,18 @@ def updateDbTasks = [:]
 pipeline {
 
     parameters {
-        string(defaultValue: "localhost", description: '1c server hostname', name: 'server1c')
-        string(defaultValue: "", description: 'Platform 1c version, for example 8.3.12.1685. If empty then last version available on host  will be used', name: 'platform1c')
-        string(defaultValue: "localhost", description: 'MS SQL server hostname', name: 'serverSql')
-        string(defaultValue: "Administrator", description: 'Infobase administrator user name', name: 'admin1cUser')
-        string(defaultValue: "", description: 'Infobase administrator 1С password', name: 'admin1cPwd')
-        string(defaultValue: "sa", description: 'MS SQL user name', name: 'sqlUser')
-        string(defaultValue: "", description: 'MS SQL user password', name: 'sqlPwd')
-        string(defaultValue: "", description: 'List of bases for testing via comma. For example work_erp,work_upp', name: 'templatebases')
-        string(defaultValue: "", description: 'Storages 1c mapped with infobases for testing via comma Amount of storages 1c must conform to amount of infobases. For example D:/temp/storage1c/erp,D:/temp/storage1c/upp', name: 'storages1cPath')
-        string(defaultValue: "Администратор", description: 'Storage 1С username. Must be single for every storage', name: 'storageUser')
-        string(description: 'Storage 1c user password. Cannot be empty', name: 'storagePwd')
+        string(defaultValue: "${env.server1c}", description: '1c server hostname', name: 'server1c')
+        string(defaultValue: "${env.server1cPort}", description: '1c server agent port. By default 1541', name: 'server1cPort')
+        string(defaultValue: "${env.platform1c}", description: 'Platform 1c version, for example 8.3.12.1685. If empty then last version available on host  will be used', name: 'platform1c')
+        string(defaultValue: "${env.serverSql}", description: 'MS SQL server hostname', name: 'serverSql')
+        string(defaultValue: "${env.admin1cUser}", description: 'Infobase administrator user name', name: 'admin1cUser')
+        string(defaultValue: "${env.admin1cPwd}", description: 'Infobase administrator 1C password', name: 'admin1cPwd')
+        string(defaultValue: "${env.sqlUser}", description: 'MS SQL user name', name: 'sqlUser')
+        string(defaultValue: "${env.sqlPwd}", description: 'MS SQL user password', name: 'sqlPwd')
+        string(defaultValue: "${env.templatebases}", description: 'List of bases for testing via comma. For example work_erp,work_upp', name: 'templatebases')
+        string(defaultValue: "${env.storages1cPath}", description: 'Storages 1c mapped with infobases for testing via comma Amount of storages 1c must conform to amount of infobases. For example D:/temp/storage1c/erp,D:/temp/storage1c/upp', name: 'storages1cPathList')
+        string(defaultValue: "${env.storageUser}", description: 'Storage 1C username. Must be single for every storage', name: 'storageUser')
+        string(defaultValue: "${env.storagePwd}", description: 'Storage 1c user password. Cannot be empty', name: 'storagePwd')
         string(defaultValue: "master", description: 'Jenkins node to launch pipeline', name: 'jenkinsAgent')
     }
 
@@ -42,7 +43,11 @@ pipeline {
                         assert storageUser
                         //assert storagePwd
 
-                        agentPort = "1551"
+                        server1c = server1c.isEmpty() ? "localhost" : server1c
+                        serverSql = serverSql.isEmpty() ? "localhost" : serverSql
+                        server1cPort = server1cPort.isEmpty() ? "1551" : server1cPort
+                        sqlUser = sqlUser.isEmpty() ? "sa" : sqlUser
+
                         templatebasesList = templatebases.toLowerCase().replaceAll("\\s", "").split(",")
                         storages1cPathList = storages1cPathList.toLowerCase().replaceAll("\\s", "").split(",")
 
@@ -68,7 +73,7 @@ pipeline {
 
                             dropDbTasks["dropDbTask_${testbase}"] = dropDbTask(
                                 server1c, 
-                                agentPort, 
+                                server1cPort, 
                                 serverSql, 
                                 testbase, 
                                 admin1cUser, 
@@ -154,7 +159,7 @@ pipeline {
                 }
 
                 dir ('build/out/allure') {
-                    writeFile file:'environment.properties', text:"Build=${jenkinsIntegration.buildURL()}"
+                    writeFile file:'environment.properties', text:"Build=${env.BUILD_URL}"
                 }
 
                 allure includeProperties: false, jdk: '', results: [[path: 'build/out/allure']]
@@ -174,14 +179,14 @@ pipeline {
 }
 
 
-def dropDbTask(server1c, agentPort, serverSql, infobase, admin1cUser, admin1cPwd, sqluser, sqlPwd) {
+def dropDbTask(server1c, server1cPort, serverSql, infobase, admin1cUser, admin1cPwd, sqluser, sqlPwd) {
     return {
         timestamps {
             stage("Deleting base ${infobase} from previous build") {
                 def projectHelpers = new ProjectHelpers()
                 def utils = new Utils()
 
-                projectHelpers.dropDb(server1c, agentPort, serverSql, infobase, admin1cUser, admin1cPwd, sqluser, sqlPwd)
+                projectHelpers.dropDb(server1c, server1cPort, serverSql, infobase, admin1cUser, admin1cPwd, sqluser, sqlPwd)
             }
         }
     }
