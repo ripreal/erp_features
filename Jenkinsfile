@@ -22,7 +22,7 @@ pipeline {
         string(defaultValue: "${env.sqlUser}", description: 'MS SQL user name', name: 'sqlUser')
         string(defaultValue: "${env.sqlPwd}", description: 'MS SQL user password', name: 'sqlPwd')
         string(defaultValue: "${env.templatebases}", description: 'List of bases for testing via comma. For example work_erp,work_upp', name: 'templatebases')
-        string(defaultValue: "${env.storages1cPath}", description: 'Storages 1c mapped with infobases for testing via comma Amount of storages 1c must conform to amount of infobases. For example D:/temp/storage1c/erp,D:/temp/storage1c/upp', name: 'storages1cPathList')
+        string(defaultValue: "${env.storages1cPath}", description: 'Storages 1c mapped with infobases for testing via comma Amount of storages 1c must conform to amount of infobases. For example D:/temp/storage1c/erp,D:/temp/storage1c/upp', name: 'storages1cPath')
         string(defaultValue: "${env.storageUser}", description: 'Storage 1C username. Must be single for every storage', name: 'storageUser')
         string(defaultValue: "${env.storagePwd}", description: 'Storage 1c user password. Cannot be empty', name: 'storagePwd')
         string(defaultValue: "master", description: 'Jenkins node to launch pipeline', name: 'jenkinsAgent')
@@ -49,7 +49,7 @@ pipeline {
                         sqlUser = sqlUser.isEmpty() ? "sa" : sqlUser
 
                         templatebasesList = templatebases.toLowerCase().replaceAll("\\s", "").split(",")
-                        storages1cPathList = storages1cPathList.toLowerCase().replaceAll("\\s", "").split(",")
+                        storages1cPathList = storages1cPath.toLowerCase().replaceAll("\\s", "").split(",")
 
                         assert storages1cPathList.size() == templatebasesList.size()
                     }
