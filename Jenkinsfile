@@ -41,20 +41,20 @@ pipeline {
                     script {
                         assert storageUser
                         assert storagePwd
-                    }
-                }
-            }
-        }
-        stage("Подготовка параметров") {
-            steps {
-                timestamps {
-                    script {
 
                         agentPort = "1551"
                         templatebasesList = templatebases.toLowerCase().replaceAll("\\s", "").split(",")
                         storages1cPathList = storages1cPathList.toLowerCase().replaceAll("\\s", "").split(",")
 
                         assert storages1cPathList.size() == templatebasesList.size()
+                    }
+                }
+            }
+        }
+        stage("Запуск") {
+            steps {
+                timestamps {
+                    script {
 
                         for (i = 0;  i < templatebasesList.size(); i++) {
                             templateDb = templatebasesList[i]
@@ -112,17 +112,9 @@ pipeline {
                                 admin1cUser, 
                                 admin1cPwd
                             )
-                            
-                        }
-                    }
-                }
-            }
-        }
 
-        stage("Запуск") {
-            steps {
-                timestamps {
-                    script {
+                        }
+                        
                         parallel dropDbTasks
                         parallel backupTasks
                         parallel restoreTasks
