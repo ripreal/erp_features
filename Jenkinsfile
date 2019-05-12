@@ -4,6 +4,7 @@ import io.libs.ProjectHelpers
 import io.libs.Utils
 
 def sqlUtils = new SqlUtils()
+def utils = new Utils()
 def backupTasks = [:]
 def restoreTasks = [:]
 def dropDbTasks = [:]
@@ -43,17 +44,16 @@ pipeline {
                     script {
                         assert storageUser
                         //assert storagePwd
+                        templatebasesList = utils.lineToArray(templatebases.toLowerCase())
+                        storages1cPathList = utils.lineToArray(storages1cPath.toLowerCase())
+                        
+                        assert storages1cPathList.size() == templatebasesList.size()
 
                         server1c = server1c.isEmpty() ? "localhost" : server1c
                         serverSql = serverSql.isEmpty() ? "localhost" : serverSql
                         server1cPort = server1cPort.isEmpty() ? "1551" : server1cPort
                         sqlUser = sqlUser.isEmpty() ? "sa" : sqlUser
                         testbase = null
-
-                        templatebasesList = templatebases.toLowerCase().replaceAll("\\s", "").split(",")
-                        storages1cPathList = storages1cPath.toLowerCase().replaceAll("\\s", "").split(",")
-
-                        assert storages1cPathList.size() == templatebasesList.size()
                     }
                 }
             }
@@ -143,13 +143,16 @@ pipeline {
 
                         def utils = new Utils()
 
-                        utils.cmd("""runner vanessa --settings tools/vrunner.json 
+                        returnCode = utils.cmd("""runner vanessa --settings tools/vrunner.json 
                             --v8version ${platform1c} 
                             --ibconnection "/S${server1c}\\${testbase}"
                             --db-user ${admin1cUser} 
                             --db-pwd ${admin1cPwd} 
                             --pathvanessa tools/add/bddRunner.epf"""
                         )
+                        if (returnCode != 0) {
+                            utils.raiseError("Возникла ошибка при запуске ADD на сервере ${server1c} и базе ${testbase}")
+                        }
                     }
                 }
             }
