@@ -15,26 +15,26 @@ def updateDbTasks = [:]
 pipeline {
 
     parameters {
-        string(defaultValue: "${env.server1c}", description: '1c server hostname', name: 'server1c')
-        string(defaultValue: "${env.server1cPort}", description: '1c server agent port. By default 1541', name: 'server1cPort')
-        string(defaultValue: "${env.platform1c}", description: 'Platform 1c version, for example 8.3.12.1685. If empty then last version available on host  will be used', name: 'platform1c')
-        string(defaultValue: "${env.serverSql}", description: 'MS SQL server hostname', name: 'serverSql')
-        string(defaultValue: "${env.admin1cUser}", description: 'Infobase administrator user name', name: 'admin1cUser')
-        string(defaultValue: "${env.admin1cPwd}", description: 'Infobase administrator 1C password', name: 'admin1cPwd')
-        string(defaultValue: "${env.sqlUser}", description: 'MS SQL user name', name: 'sqlUser')
-        string(defaultValue: "${env.sqlPwd}", description: 'MS SQL user password', name: 'sqlPwd')
-        string(defaultValue: "${env.templatebases}", description: 'List of bases for testing via comma. For example work_erp,work_upp', name: 'templatebases')
-        string(defaultValue: "${env.storages1cPath}", description: 'Storages 1c mapped with infobases for testing via comma Amount of storages 1c must conform to amount of infobases. For example D:/temp/storage1c/erp,D:/temp/storage1c/upp', name: 'storages1cPath')
-        string(defaultValue: "${env.storageUser}", description: 'Storage 1C username. Must be single for every storage', name: 'storageUser')
-        string(defaultValue: "${env.storagePwd}", description: 'Storage 1c user password. Cannot be empty', name: 'storagePwd')
-        string(defaultValue: "master", description: 'Jenkins node to launch pipeline', name: 'jenkinsAgent')
+        string(defaultValue: "${env.server1c}", description: 'Имя сервера 1с, по умолчанию localhost', name: 'server1c')
+        string(defaultValue: "${env.server1cPort}", description: 'Порт агента сервера 1с. По умолчанию 1541', name: 'server1cPort')
+        string(defaultValue: "${env.platform1c}", description: 'Версия платформы 1с, например 8.3.12.1685. По умолчанию будет использована последня версия среди установленных', name: 'platform1c')
+        string(defaultValue: "${env.serverSql}", description: 'Имя сервера MS SQL. По умолчанию localhost', name: 'serverSql')
+        string(defaultValue: "${env.admin1cUser}", description: 'Имя администратора базы тестирования 1с. Должен быть одинаковым для всех баз', name: 'admin1cUser')
+        string(defaultValue: "${env.admin1cPwd}", description: 'Пароль администратора базы тестирования 1C. Должен быть одинаковым для всех баз', name: 'admin1cPwd')
+        string(defaultValue: "${env.sqlUser}", description: 'Имя администратора сервера MS SQL. Если пустой, то используется доменная  авторизация', name: 'sqlUser')
+        string(defaultValue: "${env.sqlPwd}", description: 'Пароль администратора MS SQL.  Если пустой, то используется доменная  авторизация', name: 'sqlPwd')
+        string(defaultValue: "${env.templatebases}", description: 'Список баз для тестирования через запятую. Например work_erp,work_upp', name: 'templatebases')
+        string(defaultValue: "${env.storages1cPath}", description: 'Необязательный. Пути к хранилищам 1С для обновления копий баз тестирования через запятую. Число хранилищ (если указаны), должно соответствовать числу баз тестирования. Например D:/temp/storage1c/erp,D:/temp/storage1c/upp', name: 'storages1cPath')
+        string(defaultValue: "${env.storageUser}", description: 'Необязательный. Администратор хранилищ  1C. Должен быть одинаковым для всех хранилищ', name: 'storageUser')
+        string(defaultValue: "${env.storagePwd}", description: 'Необязательный. Пароль администратора хранилищ 1c', name: 'storagePwd')
+        string(defaultValue: "master", description: 'Нода дженкинса, на которой запускать пайплайн. По умолчанию master', name: 'jenkinsAgent')
     }
 
     agent {
         label "master"
     }
     options {
-        timeout(time: 24, unit: 'HOURS') 
+        timeout(time: 8, unit: 'HOURS') 
         buildDiscarder(logRotator(numToKeepStr:'10'))
     }
     stages {
@@ -46,12 +46,12 @@ pipeline {
                         //assert storagePwd
                         templatebasesList = utils.lineToArray(templatebases.toLowerCase())
                         storages1cPathList = utils.lineToArray(storages1cPath.toLowerCase())
-                        
+
                         assert storages1cPathList.size() == templatebasesList.size()
 
                         server1c = server1c.isEmpty() ? "localhost" : server1c
                         serverSql = serverSql.isEmpty() ? "localhost" : serverSql
-                        server1cPort = server1cPort.isEmpty() ? "1551" : server1cPort
+                        server1cPort = server1cPort.isEmpty() ? "1541" : server1cPort
                         sqlUser = sqlUser.isEmpty() ? "sa" : sqlUser
                         testbase = null
                     }
@@ -119,7 +119,6 @@ pipeline {
                                 admin1cUser, 
                                 admin1cPwd
                             )
-
                         }
 
                         parallel dropDbTasks
@@ -140,8 +139,6 @@ pipeline {
                         if (templatebasesList.size() == 0) {
                             return
                         }
-
-                        def utils = new Utils()
 
                         returnCode = utils.cmd("""runner vanessa --settings tools/vrunner.json 
                             --v8version ${platform1c} 
@@ -170,17 +167,6 @@ pipeline {
                 }
 
                 allure includeProperties: false, jdk: '', results: [[path: 'build/out/allure']]
-                /*
-                publishHTML target: [
-                    allowMissing: false, 
-                    alwaysLinkToLastBuild: true, 
-                    keepAll: false, 
-                    reportDir: 'build/out', 
-                    reportFiles: 'allure-report/index.html',                 
-                    reportName: 'HTML Report', 
-                    reportTitles: ''
-                ]
-                */
             }
         }
     }
