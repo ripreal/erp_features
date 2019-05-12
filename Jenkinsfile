@@ -167,7 +167,7 @@ pipeline {
                 }
 
                 allure includeProperties: false, jdk: '', results: [[path: 'build/out/allure']]
-                
+                /*
                 publishHTML target: [
                     allowMissing: false, 
                     alwaysLinkToLastBuild: true, 
@@ -177,6 +177,7 @@ pipeline {
                     reportName: 'HTML Report', 
                     reportTitles: ''
                 ]
+                */
             }
         }
     }
