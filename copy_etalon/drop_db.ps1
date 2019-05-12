@@ -5,7 +5,7 @@
 Param (
     [Parameter()][string]$server1c = "localhost",
     [Parameter()][string]$serverSql = "localhost",
-    [Parameter()][string]$agentPort = "1541",
+    [Parameter()][string]$agentPort = "1540",
     [Parameter()][string]$infobase = "",
     [Parameter()][string]$user = "",
     [Parameter()][string]$passw = "",
@@ -64,7 +64,6 @@ if ($baseFound -eq $true) {
 
         
         $cmd_text = "sqlcmd -S $serverSql $sqluserline $sqlpwdline -i $dir\set_offline_db.sql -b -v infobase =$infobase"
-        write-output $cmd_text 
         cmd.exe /c $cmd_text 
         write-output "Drop base..."
         $CurrentWorkingProcess.DropInfoBase($Base, 0)
@@ -105,4 +104,7 @@ if ($baseFound -eq $true) {
     } catch {
         throw $_.Exception.Message
     }
+} else {
+    write-output "Infobase $infobase to delete not found in cluster 1c"
 }
+

@@ -17,7 +17,7 @@ pipeline {
 
     parameters {
         string(defaultValue: "${env.server1c}", description: 'Имя сервера 1с, по умолчанию localhost', name: 'server1c')
-        string(defaultValue: "${env.server1cPort}", description: 'Порт агента сервера 1с. По умолчанию 1541', name: 'server1cPort')
+        string(defaultValue: "${env.server1cPort}", description: 'Порт агента кластера 1с. По умолчанию 1540', name: 'server1cPort')
         string(defaultValue: "${env.platform1c}", description: 'Версия платформы 1с, например 8.3.12.1685. По умолчанию будет использована последня версия среди установленных', name: 'platform1c')
         string(defaultValue: "${env.serverSql}", description: 'Имя сервера MS SQL. По умолчанию localhost', name: 'serverSql')
         string(defaultValue: "${env.admin1cUser}", description: 'Имя администратора базы тестирования 1с. Должен быть одинаковым для всех баз', name: 'admin1cUser')
@@ -204,14 +204,28 @@ def createDbTask(server1c, serverSql, platform1c, infobase) {
     }
 }
 
-def backupTask(serverSql, infobase, backupPath) {
+def backupTask(serverSql, infobase, backupPath, sqlUser, sqlPwd) {
     return {
         stage("sql бекап ${infobase}") {
             timestamps {
                 def sqlUtils = new SqlUtils()
 
-                sqlUtils.checkDb(serverSql, infobase)
-                sqlUtils.backupDb(serverSql, infobase, backupPath)
+                sqlUtils.checkDb(serverSql, infobase, sqlUser, sqlPwd)
+                sqlUtils.backupDb(serverSql, infobase, backupPath, sqlUser, sqlPwd)
+            }
+        }
+    }
+}
+
+def restoreTask(serverSql, infobase, backupPath, sqlUser, sqlPwd) {
+    return {
+        stage("Востановление ${infobase} из sql бекапа") {
+            timestamps {
+                sqlUtils = new SqlUtils()
+
+                sqlUtils.createEmptyDb(serverSql, infobase, sqlUser, sqlPwd)
+                sqlUtils.restoreDb(serverSql, infobase, backupPath, sqlUser, sqlPwd)
+                sqlUtils.clearBackups(backupPath)
             }
         }
     }
@@ -223,20 +237,6 @@ def runHandlers1cTask(server1c, infobase, admin1cUser, admin1cPwd, testbaseConnS
             timestamps {
                 def projectHelpers = new ProjectHelpers()
                 projectHelpers.unlocking1cBase(testbaseConnString, admin1cUser, admin1cPwd)
-            }
-        }
-    }
-}
-
-def restoreTask(serverSql, infobase, backupPath) {
-    return {
-        stage("Востановление ${infobase} из sql бекапа") {
-            timestamps {
-                sqlUtils = new SqlUtils()
-
-                sqlUtils.createEmptyDb(serverSql, infobase)
-                sqlUtils.restoreDb(serverSql, infobase, backupPath)
-                sqlUtils.clearBackups(backupPath)
             }
         }
     }

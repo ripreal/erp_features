@@ -1,0 +1,1 @@
+sqlcmd -S localhost -U sa -P Kentdfu!1 -i "D:\games\programms\jenkins\workspace\erp_features/copy_etalon/backup.sql" -b -v backupdb =temp -v bakfile =temp_temp_20190501222 
