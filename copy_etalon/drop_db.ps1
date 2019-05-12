@@ -5,7 +5,7 @@
 Param (
     [Parameter()][string]$server1c = "localhost",
     [Parameter()][string]$serverSql = "localhost",
-    [Parameter()][string]$agentPort = "",
+    [Parameter()][string]$agentPort = "1541",
     [Parameter()][string]$infobase = "",
     [Parameter()][string]$user = "",
     [Parameter()][string]$passw = "",

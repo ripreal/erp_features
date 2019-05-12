@@ -47,9 +47,10 @@ def getConnString(server1c, infobase) {
 // Удаляет базу из кластера через powershell.
 //
 // Параметры:
-//  shortPlatform - номер платформы 1С, например 8.3.12
-//  baseServer - сервер sql 
-//  base - имя базы на сервере sql
+//  server1c - сервер 1с 
+//  agentPort - порт агента кластера 1с
+//  serverSql - сервер sql
+//  base - база для удаления из кластера
 //  admin1cUser - имя администратора 1С в кластере для базы
 //  admin1cPwd - пароль администратора 1С в кластере для базы
 //  sqluser - юзер sql
@@ -85,9 +86,9 @@ def dropDb(server1c, agentPort, serverSql, base, admin1cUser, admin1cPwd, sqluse
         sqlpasswLine = "-sqlPwd ${sqlPwd}"
     }
 
-    returnCode = utils.cmd("powershell -file ${env.WORKSPACE}/copy_etalon/drop_db.ps1 -server1c ${server1c} -serverSql ${serverSql} -infobase ${base} ${admin1cUserLine} ${admin1cPwdLine} ${sqluserLine} ${sqlpasswLine} ${fulldropLine}")
+    returnCode = utils.cmd("powershell -file ${env.WORKSPACE}/copy_etalon/drop_db.ps1 -server1c ${server1c} -agentPort ${agentPort} -serverSql ${serverSql} -infobase ${base} ${admin1cUserLine} ${admin1cPwdLine} ${sqluserLine} ${sqlpasswLine} ${fulldropLine}")
     if (returnCode != 0) { 
-        eror "error when deleting base with COM ${server1c}\\${base}. See logs above fore more information."
+        error "error when deleting base with COM ${server1c}\\${base}. See logs above fore more information."
     }
 }
 
