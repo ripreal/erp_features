@@ -32,12 +32,12 @@ def createDb(platform, server1c, serversql, base, cfdt, isras) {
 //
 // Параметры:
 //  сonnection_string - путь к 1С базе.
-//  admin_1c_user - имя админа 1С базы
-//  admin_1c_password - пароль админа 1С базы
+//  admin1cUsr - имя админа 1С базы
+//  admin1cPwd - пароль админа 1С базы
 //
-def unlocking1cBase(utils, onnection_string, admin_1c_user, admin_1c_password) {
+def unlocking1cBase(utils, connString, admin1cUsr, admin1cPwd) {
     utils = new Utils()
-    utils.cmd("runner run --execute ${env.WORKSPACE}/one_script_tools/unlockBase1C.epf --command \"-locktype unlock -usersettingsprovider FILE\" --db-user ${admin_1c_user} --db-pwd ${admin_1c_password} --ibconnection=${onnection_string}")
+    utils.cmd("runner run --execute ${env.WORKSPACE}/one_script_tools/unlockBase1C.epf --command \"-locktype unlock\" --db-user ${admin1cUsr} --db-pwd ${admin1cPwd} --ibconnection=${connString}")
 }
 
 def getConnString(server1c, infobase) {
@@ -65,6 +65,16 @@ def dropDb(server1c, agentPort, serverSql, base, admin1cUser, admin1cPwd, sqluse
         fulldropLine = "-fulldrop true"
     }
 
+    admin1cUserLine = "";
+    if (admin1cUser != null && !admin1cUser.isEmpty()) {
+        admin1cUserLine = "-user ${admin1cUser}"
+    }
+
+    admin1cPwdLine = "";
+    if (admin1cPwd != null && !admin1cPwd.isEmpty()) {
+        admin1cPwdLine = "-passw ${admin1cPwd}"
+    }
+
     sqluserLine = "";
     if (sqluser != null && !sqluser.isEmpty()) {
         sqluserLine = "-sqluser ${sqluser}"
@@ -75,7 +85,7 @@ def dropDb(server1c, agentPort, serverSql, base, admin1cUser, admin1cPwd, sqluse
         sqlpasswLine = "-sqlPwd ${sqlPwd}"
     }
 
-    returnCode = utils.cmd("powershell -file ${env.WORKSPACE}/copy_etalon/drop_db.ps1 -server1c ${server1c} -serverSql ${serverSql} -infobase ${base} -user ${admin1cUser} -passw ${admin1cPwd} ${sqluserLine} ${sqlpasswLine} -fulldrop ${fulldropLine}")
+    returnCode = utils.cmd("powershell -file ${env.WORKSPACE}/copy_etalon/drop_db.ps1 -server1c ${server1c} -serverSql ${serverSql} -infobase ${base} ${admin1cUserLine} ${admin1cPwdLine} ${sqluserLine} ${sqlpasswLine} ${fulldropLine}")
     if (returnCode != 0) { 
         eror "error when deleting base with COM ${server1c}\\${base}. See logs above fore more information."
     }

@@ -5,12 +5,12 @@
 Param (
     [Parameter()][string]$server1c = "localhost",
     [Parameter()][string]$serverSql = "localhost",
-    [Parameter()][string]$agentPort = "1550",
-    [Parameter()][string]$infobase = "temp",
+    [Parameter()][string]$agentPort = "",
+    [Parameter()][string]$infobase = "",
     [Parameter()][string]$user = "",
     [Parameter()][string]$passw = "",
     [Parameter()][string]$sqluser = "sa",
-    [Parameter()][string]$sqlPwd = "Kentdfu!1",
+    [Parameter()][string]$sqlPwd = "",
     [Parameter()][string]$fulldrop = $false
 )
 
