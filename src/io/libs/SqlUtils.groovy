@@ -23,7 +23,7 @@ def checkDb(dbServer, infobase, sqlUser, sqlPwd) {
         sqlPwdPath = "-P ${sqlPwd}"
     }
 
-    returnCode = utils.cmd("sqlcmd -S ${dbServer} ${sqlUserpath} ${sqlPwdPath} -E -i \"${env.WORKSPACE}/copy_etalon/error.sql\" -b -v restoreddb =${infobase}");
+    returnCode = utils.cmd("sqlcmd -S ${dbServer} ${sqlUserpath} ${sqlPwdPath} -i \"${env.WORKSPACE}/copy_etalon/error.sql\" -b -v restoreddb =${infobase}");
     if (returnCode != 0) {
         utils.raiseError("Возникла ошибка при при проверке соединения к sql базе ${dbServer}\\${infobase}. Для подробностей смотрите логи")
     }
@@ -53,7 +53,7 @@ def backupDb(dbServer, infobase, backupPath, sqlUser, sqlPwd) {
         sqlPwdPath = "-P ${sqlPwd}"
     }
 
-    returnCode = utils.cmd("sqlcmd -S ${dbServer} ${sqlUserpath} ${sqlPwdPath} -E -i \"${env.WORKSPACE}/copy_etalon/backup.sql\" -b -v backupdb =${infobase} -v bakfile =${backupPath}")
+    returnCode = utils.cmd("sqlcmd -S ${dbServer} ${sqlUserpath} ${sqlPwdPath} -i \"${env.WORKSPACE}/copy_etalon/backup.sql\" -b -v backupdb =${infobase} -v bakfile =${backupPath}")
     if (returnCode != 0) {
         utils.raiseError("Возникла ошибки при создании бекапа sql базы ${dbServer}\\${infobase}. Для подробностей смотрите логи")
     }
@@ -82,7 +82,7 @@ def createEmptyDb(dbServer, infobase, sqlUser, sqlPwd) {
     }
 
     utils = new Utils()
-    returnCode = utils.cmd("sqlcmd -S ${dbServer} ${sqlUserpath} ${sqlPwdPath} -E -i \"${env.WORKSPACE}/copy_etalon/error_create.sql\" -b -v restoreddb =${infobase}")
+    returnCode = utils.cmd("sqlcmd -S ${dbServer} ${sqlUserpath} ${sqlPwdPath} -i \"${env.WORKSPACE}/copy_etalon/error_create.sql\" -b -v restoreddb =${infobase}")
     if (returnCode != 0) {
         utils.raiseError("Возникла ошибка при создании пустой sql базы на  ${dbServer}\\${infobase}. Для подробностей смотрите логи")
     }
@@ -113,7 +113,7 @@ def restoreDb(dbServer, infobase, backupPath, sqlUser, sqlPwd) {
         sqlPwdPath = "-P ${sqlPwd}"
     }
 
-    returnCode = utils.cmd("sqlcmd -S ${dbServer} -E -i \"${env.WORKSPACE}/copy_etalon/restore.sql\" -b -v restoreddb =${infobase} -v bakfile =${backupPath}")
+    returnCode = utils.cmd("sqlcmd -S ${dbServer} -i \"${env.WORKSPACE}/copy_etalon/restore.sql\" -b -v restoreddb =${infobase} -v bakfile =${backupPath}")
     if (returnCode != 0) {
          utils.raiseError("Возникла ошибка при восстановлении базы из sql бекапа ${dbServer}\\${infobase}. Для подробностей смотрите логи")
     } 
