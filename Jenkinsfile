@@ -55,6 +55,11 @@ pipeline {
                         server1cPort = server1cPort.isEmpty() ? "1541" : server1cPort
                         sqlUser = sqlUser.isEmpty() ? "sa" : sqlUser
                         testbase = null
+
+                        // создаем пустые каталоги
+                        dir ('build') {
+                            writeFile file:'dummy', text:''
+                        }
                     }
                 }
             }
@@ -69,10 +74,7 @@ pipeline {
                             storage1cPath = storages1cPathList[i]
                             testbase = "temp_${templateDb}"
                             testbaseConnString = projectHelpers.getConnString(server1c, testbase)
-                            backupPath = "temp_${templateDb}_${utils.currentDateStamp()}"
-
-                            backupFile = File.createTempFile(backupPath, ".bak")
-                            //backupFile.deleteOnExit()
+                            backupPath = "${env.WORKSPACE}/build/temp_${templateDb}_${utils.currentDateStamp()}"
 
                             // 1. Удаляем тестовую базу из кластера (если он там была) и очищаем клиентский кеш 1с
                             dropDbTasks["dropDbTask_${testbase}"] = dropDbTask(
@@ -229,7 +231,6 @@ def restoreTask(serverSql, infobase, backupPath, sqlUser, sqlPwd) {
 
                 sqlUtils.createEmptyDb(serverSql, infobase, sqlUser, sqlPwd)
                 sqlUtils.restoreDb(serverSql, infobase, backupPath, sqlUser, sqlPwd)
-                sqlUtils.clearBackups(backupPath)
             }
         }
     }
