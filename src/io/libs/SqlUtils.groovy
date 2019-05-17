@@ -53,7 +53,7 @@ def backupDb(dbServer, infobase, backupPath, sqlUser, sqlPwd) {
         sqlPwdPath = "-P ${sqlPwd}"
     }
 
-    returnCode = utils.cmd("sqlcmd -S ${dbServer} ${sqlUserpath} ${sqlPwdPath} -i \"${env.WORKSPACE}/copy_etalon/backup.sql\" -b -v backupdb =${infobase} -v bakfile="\${backupPath}\"")
+    returnCode = utils.cmd("sqlcmd -S ${dbServer} ${sqlUserpath} ${sqlPwdPath} -i \"${env.WORKSPACE}/copy_etalon/backup.sql\" -b -v backupdb =${infobase} -v bakfile=\"${backupPath}\"")
     if (returnCode != 0) {
         utils.raiseError("Возникла ошибки при создании бекапа sql базы ${dbServer}\\${infobase}. Для подробностей смотрите логи")
     }
