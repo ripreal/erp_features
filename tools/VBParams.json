@@ -3,15 +3,18 @@
     "ЗавершитьРаботуСистемы": true,
     "ВыводитьСообщенияВФайл": "$workspaceRoot/build/out/vb.log",
     "ЗакрытьTestClientПослеЗапускаСценариев": true,
-    "КаталогФич": "$workspaceRoot/features",
+    "КаталогФич": "$workspaceRoot/features/empty.feature",
     "КаталогиБиблиотек": [
         "./features/Libraries",
         "$workspaceRoot/features/bit_libs"
     ],
-	"СписокТеговИсключение":[
-		"IgnoreOnCIMainBuild",
-		"Draft"
-	],
+    "СписокТеговИсключение":[
+        "IgnoreOnCIMainBuild",
+        "Draft"
+    ],
+    "СписокТеговОтбор":[
+        "FirstStart"
+    ],
     "ДелатьОтчетВФорматеАллюр": true,
     "КаталогOutputAllureБазовый": "$workspaceRoot/build/out/allure",
     "ВРЕМЕННО_ОТКЛЮЧЕН_ДелатьОтчетВФорматеCucumberJson": true,
