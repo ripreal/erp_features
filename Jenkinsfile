@@ -54,7 +54,7 @@ pipeline {
                         server1c = server1c.isEmpty() ? "localhost" : server1c
                         serverSql = serverSql.isEmpty() ? "localhost" : serverSql
                         server1cPort = server1cPort.isEmpty() ? "1540" : server1cPort
-                        agent1cPort = agent1cPort.isEmpty() ? "1541" : server1cPort
+                        agent1cPort = agent1cPort.isEmpty() ? "1541" : agent1cPort
                         env.sqlUser = sqlUser.isEmpty() ? "sa" : sqlUser
                         testbase = null
 
@@ -187,7 +187,7 @@ pipeline {
 def dropDbTask(server1c, server1cPort, serverSql, infobase, admin1cUser, admin1cPwd, sqluser, sqlPwd) {
     return {
         timestamps {
-            stage("Удаление ${infobase} из кластера 1с") {
+            stage("Удаление ${infobase}") {
                 def projectHelpers = new ProjectHelpers()
                 def utils = new Utils()
 
@@ -199,7 +199,7 @@ def dropDbTask(server1c, server1cPort, serverSql, infobase, admin1cUser, admin1c
 
 def createDbTask(server1c, serverSql, platform1c, infobase) {
     return {
-        stage("Создание ${infobase} в кластере 1с") {
+        stage("Создание ${infobase}") {
             timestamps {
                 def projectHelpers = new ProjectHelpers()
                 try {
@@ -227,7 +227,7 @@ def backupTask(serverSql, infobase, backupPath, sqlUser, sqlPwd) {
 
 def restoreTask(serverSql, infobase, backupPath, sqlUser, sqlPwd) {
     return {
-        stage("Востановление ${infobase} из sql бекапа") {
+        stage("Востановление ${infobase} бекапа") {
             timestamps {
                 sqlUtils = new SqlUtils()
 
@@ -240,7 +240,7 @@ def restoreTask(serverSql, infobase, backupPath, sqlUser, sqlPwd) {
 
 def runHandlers1cTask(infobase, admin1cUser, admin1cPwd, testbaseConnString) {
     return {
-        stage("Запуск вн. 1с обработки на ${infobase}") {
+        stage("Запуск 1с обработки на ${infobase}") {
             timestamps {
                 def projectHelpers = new ProjectHelpers()
                 projectHelpers.unlocking1cBase(testbaseConnString, admin1cUser, admin1cPwd)
@@ -251,12 +251,10 @@ def runHandlers1cTask(infobase, admin1cUser, admin1cPwd, testbaseConnString) {
 
 def updateDbTask(platform1c, infobase, storage1cPath, storageUser, storagePwd, connString, admin1cUser, admin1cPwd) {
     return {
-        stage("Загрузка из хранилища 1с ${infobase}") {
+        stage("Загрузка из хранилища ${infobase}") {
             timestamps {
-                echo "Executing updating from storage..."
                 prHelpers = new ProjectHelpers()
-          
-                echo "Loading from 1C storage..."
+
                 prHelpers.loadCfgFrom1CStorage(storage1cPath, storageUser, storagePwd, connString, admin1cUser, admin1cPwd, platform1c)
                 prHelpers.updateInfobase(connString, admin1cUser, admin1cPwd, platform1c)
             }
