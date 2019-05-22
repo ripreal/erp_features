@@ -5,8 +5,7 @@
     "ЗакрытьTestClientПослеЗапускаСценариев": true,
     "КаталогФич": "$workspaceRoot/features/empty.feature",
     "КаталогиБиблиотек": [
-        "./features/Libraries",
-        "$workspaceRoot/features/bit_libs"
+        "./features/Libraries"
     ],
     "СписокТеговИсключение":[
         "IgnoreOnCIMainBuild",
