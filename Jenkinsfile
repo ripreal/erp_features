@@ -122,7 +122,6 @@ pipeline {
                             )
                             // 6. Запускаем внешнюю обработку 1С, которая очищает базу от всплывающего окна с тем, что база перемещена при старте 1С
                             runHandlers1cTasks["runHandlers1cTask_${testbase}"] = runHandlers1cTask(
-                                server1c, 
                                 testbase, 
                                 admin1cUser, 
                                 admin1cPwd,
@@ -236,7 +235,7 @@ def restoreTask(serverSql, infobase, backupPath, sqlUser, sqlPwd) {
     }
 }
 
-def runHandlers1cTask(server1c, infobase, admin1cUser, admin1cPwd, testbaseConnString) {
+def runHandlers1cTask(infobase, admin1cUser, admin1cPwd, testbaseConnString) {
     return {
         stage("Запуск вн. 1с обработки на ${infobase}") {
             timestamps {
