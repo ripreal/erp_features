@@ -193,7 +193,7 @@ def dropDbTask(server1c, server1cPort, serverSql, infobase, admin1cUser, admin1c
 
 def createDbTask(server1c, serverSql, platform1c, infobase) {
     return {
-        stage("Создание ${infobase}") {
+        stage("Создание базы ${infobase}") {
             timestamps {
                 def projectHelpers = new ProjectHelpers()
                 try {
