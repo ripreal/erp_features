@@ -1,0 +1,41 @@
+﻿{
+    "$schema":"https://raw.githubusercontent.com/silverbulleters/vanessa-runner/develop/behavior-schema.json",
+    "ИмяСборки": "Сборка 8.3.10 UF",
+    "ВерсияПлатформы": "8.3.10",
+    "ВыводитьСообщенияВФайл": "$workspaceRoot/build/message.txt",
+    "ПутьКVanessaADD": "$workspaceRoot/bddRunner.epf",
+    "КаталогФич": "$workspaceRoot/features/",
+    "КаталогиБиблиотек": [
+        "$instrumentsRoot/./features/libraries/"
+    ],
+    "ВыполнитьСценарии": "Истина",
+    "ЗавершитьРаботуСистемы": "Истина",
+    "ЗакрытьTestClientПослеЗапускаСценариев": "Истина",
+    "ДелатьЛогВыполненияСценариевВЖР": "Истина",
+    "ДелатьОтчетВФорматеАллюр": "Истина",
+    "ДелатьОтчетВФорматеjUnit": "Истина",
+    "ДелатьОтчетВФорматеCucumberJson": "Истина",
+    "ДелатьЛогВыполненияСценариевВТекстовыйФайл": "Истина",
+    "КаталогOutputAllureБазовый": "$workspaceRoot/build/ServiceBases/allurereport",
+    "КаталогOutputjUnit": "$workspaceRoot/build/ServiceBases/junitreport",
+    "КаталогOutputCucumberJson": "$workspaceRoot/build/ServiceBases/cucumber",
+    "СоздаватьПодкаталогВКаталогеAllureДляЭтойСборки": "Ложь",
+    "ДелатьСкриншотПриВозникновенииОшибки": "Истина",
+    "КаталогOutputСкриншоты": "$workspaceRoot/build/ServiceBases/allurereport/",
+    "ИмяФайлаЛогВыполненияСценариев": "$workspaceRoot/build/vanessaonline.txt",
+    "КомандаСделатьСкриншот": "nircmd.exe savescreenshot ",
+    "ВыгружатьСтатусВыполненияСценариевВФайл": "Истина",
+    "ДобавлятьКИмениСценарияУловияВыгрузки": "Ложь",
+    "ПутьКФайлуДляВыгрузкиСтатусаВыполненияСценариев": "$workspaceRoot/build/buildstatus.log",
+    "СписокТеговИсключение": [
+        "IgnoreOnCIMainBuild",
+        "IgnoreOn8310",
+        "IgnoreOnUFBuilds",
+        "Ignore",
+        "IgnoreIfNotIrfanView",
+        "NotOnSRC",
+        "IgnoreOnLinux",
+        "Video"
+    ],
+    "СписокТеговОтбор": []
+}
