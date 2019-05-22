@@ -17,7 +17,7 @@ pipeline {
 
     parameters {
         string(defaultValue: "${env.server1c}", description: 'Имя сервера 1с, по умолчанию localhost', name: 'server1c')
-        string(defaultValue: "${env.server1cPort}", description: 'Порт агента кластера 1с. По умолчанию 1540', name: 'server1cPort')
+        string(defaultValue: "${env.server1cPort}", description: 'Порт рабочего сервера 1с. По умолчанию 1540. Не путать с портом агента кластера (1541)', name: 'server1cPort')
         string(defaultValue: "${env.platform1c}", description: 'Версия платформы 1с, например 8.3.12.1685. По умолчанию будет использована последня версия среди установленных', name: 'platform1c')
         string(defaultValue: "${env.serverSql}", description: 'Имя сервера MS SQL. По умолчанию localhost', name: 'serverSql')
         string(defaultValue: "${env.admin1cUser}", description: 'Имя администратора базы тестирования 1с. Должен быть одинаковым для всех баз', name: 'admin1cUser')
@@ -72,7 +72,7 @@ pipeline {
                         for (i = 0;  i < templatebasesList.size(); i++) {
                             templateDb = templatebasesList[i]
                             storage1cPath = storages1cPathList[i]
-                            testbase = "temp_${templateDb}"
+                            testbase = "test_${templateDb}"
                             testbaseConnString = projectHelpers.getConnString(server1c, testbase)
                             backupPath = "${env.WORKSPACE}/build/temp_${templateDb}_${utils.currentDateStamp()}"
 
