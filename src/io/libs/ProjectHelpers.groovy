@@ -40,8 +40,8 @@ def unlocking1cBase(utils, connString, admin1cUsr, admin1cPwd) {
     utils.cmd("runner run --execute ${env.WORKSPACE}/one_script_tools/unlockBase1C.epf --command \"-locktype unlock\" --db-user ${admin1cUsr} --db-pwd ${admin1cPwd} --ibconnection=${connString}")
 }
 
-def getConnString(server1c, infobase) {
-    return "/S${server1c}\\${infobase}"
+def getConnString(server1c, infobase, agent1cPort) {
+    return "/S${server1c}:${agent1cPort}\\${infobase}"
 }
 
 // Удаляет базу из кластера через powershell.
