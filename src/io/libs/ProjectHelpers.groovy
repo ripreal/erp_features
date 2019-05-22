@@ -35,7 +35,7 @@ def createDb(platform, server1c, serversql, base, cfdt, isras) {
 //  admin1cUsr - имя админа 1С базы
 //  admin1cPwd - пароль админа 1С базы
 //
-def unlocking1cBase(utils, connString, admin1cUsr, admin1cPwd) {
+def unlocking1cBase(connString, admin1cUsr, admin1cPwd) {
     utils = new Utils()
     utils.cmd("runner run --execute ${env.WORKSPACE}/one_script_tools/unlockBase1C.epf --command \"-locktype unlock\" --db-user ${admin1cUsr} --db-pwd ${admin1cPwd} --ibconnection=${connString}")
 }
