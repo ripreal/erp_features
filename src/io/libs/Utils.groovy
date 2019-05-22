@@ -299,7 +299,7 @@ def getAllFiles(path) {
 //  Array - массив строк
 //
 def lineToArray(line, splitter = ",") {
-    dirtArray = templatebases.replaceAll("\\s", "").split(",")
+    dirtArray = line.replaceAll("\\s", "").split(",")
     cleanArray = []
     for (item in dirtArray) {
         if (!item.isEmpty()) {
