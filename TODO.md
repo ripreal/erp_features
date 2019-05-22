@@ -13,7 +13,7 @@ TODO:
 oneScript
 плагин для vsCode для отладки jenkinsfile
 runner
-irac
+add
 
 # Предпоссылки
 * Имя администраторов во всех базах одинаковые

@@ -112,7 +112,8 @@ pipeline {
                             )
                             // 5. Обновляем тестовую базу из хранилища 1С (если применимо)
                             updateDbTasks["updateTask_${testbase}"] = updateDbTask(
-                                platform1c, 
+                                platform1c,
+                                testbase, 
                                 storage1cPath, 
                                 storageUser, 
                                 storagePwd, 
@@ -246,15 +247,15 @@ def runHandlers1cTask(infobase, admin1cUser, admin1cPwd, testbaseConnString) {
     }
 }
 
-def updateDbTask(platform1c, storage1cPath, storageUser, storagePwd, connString, admin1cUser, admin1cPwd) {
+def updateDbTask(platform1c, infobase, storage1cPath, storageUser, storagePwd, connString, admin1cUser, admin1cPwd) {
     return {
-        stage("Загрузка из хранилища 1с ${userBase}") {
+        stage("Загрузка из хранилища 1с ${infobase}") {
             timestamps {
                 echo "Executing updating from storage..."
                 prHelpers = new ProjectHelpers()
           
                 echo "Loading from 1C storage..."
-                prHelpers.loadCfgFrom1CStorage(storage1cPath, storageUser, storagePwd, userBaseConnString, admin1cUser, admin1cPwd, platform1c)
+                prHelpers.loadCfgFrom1CStorage(storage1cPath, storageUser, storagePwd, connString, admin1cUser, admin1cPwd, platform1c)
                 prHelpers.updateInfobase(connString, admin1cUser, admin1cPwd, platform1c)
             }
         }

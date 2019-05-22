@@ -1,1 +1,1 @@
-sqlcmd -S localhost -U sa -P Kentdfu!1 -i "D:\games\programms\jenkins\workspace\erp_features/copy_etalon/backup.sql" -b -v backupdb =temp -v bakfile =temp_temp_20190501222 
+"C:\Program Files (x86)\1Cv8\8.3.14.1630\bin\1cv8.exe" CREATEINFOBASE "Srvr=localhost:1551;Ref=test_Temptes;DBMS=MSSQLServer;DBSrvr=localhost;DBUID=sa;DBPwd=Kentdfu!1;DB=test_Temp;SQLYOffs=2000;CrSQLDB=Y;SchJobDn=Y" /Out "D:\work\1C_PR\erp_features\tsbat5oy.0il.txt" /AddInList"test_Temp"
