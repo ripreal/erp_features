@@ -9,7 +9,7 @@ Param (
     [Parameter()][string]$infobase = "",
     [Parameter()][string]$user = "",
     [Parameter()][string]$passw = "",
-    [Parameter()][string]$sqluser = "sa",
+    [Parameter()][string]$sqluser = "",
     [Parameter()][string]$sqlPwd = "",
     [Parameter()][string]$fulldrop = $false
 )
@@ -42,10 +42,38 @@ $BaseInfo | ForEach-Object {
         $baseFound = $true
         $Base = $_
     }    
-}
-
+}  
 
 if ($baseFound -eq $true) {
+
+    #блокируем РЗ
+    $Base.ScheduledJobsDenied = $true
+    $Base.SessionsDenied = $true
+    $WorkingProcess.UpdateInfoBase($Base)
+
+    # Получаем список сессий кластера и прерываем их
+    foreach ($CurrCluster in $Clusters) {
+        $Sessions = $ServerAgent.GetSessions($CurrCluster)
+        if (!($Sessions.Count -eq 0))
+        {
+            foreach ($Session in $Sessions)
+            {
+                if ($Session.Infobase.Name -eq $infobase) {
+                    if ($Session.AppID -eq "COMConsole") {
+                        continue;
+                    }
+                    write-host "Reset session" $Session.AppID "with user" $Session.UserName
+                    try {
+                        $ServerAgent.TerminateSession($Cluster, $Session)
+                    } catch {
+                        write-output $_.Exception.Message
+                    }
+                }
+            }
+        }
+    }
+
+    # Удаляем базу из кластера
     write-output "Removing database from cluster..."
     #удаляем базу
     try {
