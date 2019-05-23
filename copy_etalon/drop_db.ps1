@@ -59,9 +59,6 @@ if ($baseFound -eq $true) {
             foreach ($Session in $Sessions)
             {
                 if ($Session.Infobase.Name -eq $infobase) {
-                    if ($Session.AppID -eq "COMConsole") {
-                        continue;
-                    }
                     write-host "Reset session" $Session.AppID "with user" $Session.UserName
                     try {
                         $ServerAgent.TerminateSession($Cluster, $Session)
