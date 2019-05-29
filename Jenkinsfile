@@ -249,6 +249,10 @@ def updateDbTask(platform1c, infobase, storage1cPath, storageUser, storagePwd, c
             timestamps {
                 prHelpers = new ProjectHelpers()
 
+                if (storage1cPath.isEmpty()) {
+                    return
+                }
+
                 prHelpers.loadCfgFrom1CStorage(storage1cPath, storageUser, storagePwd, connString, admin1cUser, admin1cPwd, platform1c)
                 prHelpers.updateInfobase(connString, admin1cUser, admin1cPwd, platform1c)
             }
