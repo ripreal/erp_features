@@ -60,7 +60,7 @@ def getConnString(server1c, infobase, agent1cPort) {
 def dropDb(server1c, agentPort, serverSql, base, admin1cUser, admin1cPwd, sqluser, sqlPwd, fulldrop = false) {
 
     utils = new Utils()
-    /*
+    
     fulldropLine = "";
     if (fulldrop) {
         fulldropLine = "-fulldrop true"
@@ -90,15 +90,9 @@ def dropDb(server1c, agentPort, serverSql, base, admin1cUser, admin1cPwd, sqluse
     if (returnCode != 0) { 
         error "error when deleting base with COM ${server1c}\\${base}. See logs above fore more information."
     }
-
-    */
-    returnCode = utils.cmd("${env.WORKSPACE}/copy_etalon/drop_db.bat ${server1c} ${agentPort} ${serverSql} ${base} ${admin1cUser} ${admin1cPwd} ${sqluser} ${sqlPwd} ${fulldrop}")
-    if (returnCode != 0) { 
-        error "error when deleting base with COM ${server1c}\\${base}. See logs above fore more information."
-    }
 }
 
-// Загружает в базу конфигурацию из 1С хранилища. Базу желательно подключить к хранилищу под загружаемыйм пользователем,
+// Загружает в базу конфигурацию из 1С хранилища. Базу желательно подключить к хранилищу под загружаемым пользователем,
 //  т.к. это даст буст по скорости загрузки.
 //
 // Параметры:

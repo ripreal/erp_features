@@ -13,13 +13,13 @@ set fulldrop=%9
 if "%admin1cUser%" == "" (
     set admin1cUserLine=""
 )else (
-    set admin1cUserLine= -user %sqluser%
+    set admin1cUserLine= -user %admin1cUser%
 )
 
 if "%admin1cPwd%" == "" (
     set admin1cPwdLine=""
 )else (
-    set admin1cPwdLine= -passw %sqluser%
+    set admin1cPwdLine= -passw %admin1cPwd%
 )
 
 
