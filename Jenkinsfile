@@ -251,7 +251,7 @@ def updateDbTask(platform1c, infobase, storage1cPath, storageUser, storagePwd, c
             timestamps {
                 prHelpers = new ProjectHelpers()
 
-                if (storage1cPath.isEmpty()) {
+                if (storage1cPath == null || storage1cPath.isEmpty()) {
                     return
                 }
 
