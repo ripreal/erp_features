@@ -3,7 +3,7 @@
     "ЗавершитьРаботуСистемы": true,
     "ВыводитьСообщенияВФайл": "$workspaceRoot/build/out/vb.log",
     "ЗакрытьTestClientПослеЗапускаСценариев": true,
-    "КаталогФич": "$workspaceRoot/features/empty.feature",
+    "КаталогФич": "$workspaceRoot/features",
     "КаталогиБиблиотек": [
         "./features/Libraries"
     ],
