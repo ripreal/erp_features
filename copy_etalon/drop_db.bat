@@ -10,6 +10,19 @@ set sqluser=%7
 set sqlpassw=%8
 set fulldrop=%9
 
+if "%admin1cUser%" == "" (
+    set admin1cUserLine=""
+)else (
+    set admin1cUserLine= -user %sqluser%
+)
+
+if "%admin1cPwd%" == "" (
+    set admin1cPwdLine=""
+)else (
+    set admin1cPwdLine= -passw %sqluser%
+)
+
+
 if "%sqluser%" == "" (
     set sqluserLine=""
 )else (
@@ -28,10 +41,10 @@ if "%fulldrop%" == "" (
     set fulldropLine = -fulldrop true
 )
 
-"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -file drop_db.ps1 -server1c %server1c% -agentPort %agentPort% -serverSql %serverSql% -infobase %base% %admin1cUser% %admin1cPwd% %sqluserLine% %sqlpasswLine% %fulldropLine%
+"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -file drop_db.ps1 -server1c %server1c% -agentPort %agentPort% -serverSql %serverSql% -infobase %base% %admin1cUserLine% %admin1cPwdLine% %sqluserLine% %sqlpasswLine% %fulldropLine%
 if NOT %ERRORLEVEL% == 0 (
     echo "Script failed  when executing 64-bit powershell drop_db script. Let's try 32-bit..."
-    "C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe" -file drop_db.ps1 -server1c %server1c% -agentPort %agentPort% -serverSql %serverSql% -infobase %base% %admin1cUser% %admin1cPwd% %sqluserLine% %sqlpasswLine% %fulldropLine%
+    "C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe" -file drop_db.ps1 -server1c %server1c% -agentPort %agentPort% -serverSql %serverSql% -infobase %base% %admin1cUserLine% %admin1cPwdLine% %sqluserLine% %sqlpasswLine% %fulldropLine%
 )
 
 rem 32-bit PowerShell 	C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe
