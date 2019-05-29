@@ -49,7 +49,9 @@ pipeline {
                         templatebasesList = utils.lineToArray(templatebases.toLowerCase())
                         storages1cPathList = utils.lineToArray(storages1cPath.toLowerCase())
 
-                        assert storages1cPathList.size() == templatebasesList.size()
+                        if (storages1cPathList.size() == 0) {
+                            assert storages1cPathList.size() == templatebasesList.size()
+                        }
 
                         server1c = server1c.isEmpty() ? "localhost" : server1c
                         serverSql = serverSql.isEmpty() ? "localhost" : serverSql
