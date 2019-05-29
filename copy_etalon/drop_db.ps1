@@ -5,8 +5,8 @@
 Param (
     [Parameter()][string]$server1c = "localhost",
     [Parameter()][string]$serverSql = "localhost",
-    [Parameter()][string]$agentPort = "1540",
-    [Parameter()][string]$infobase = "",
+    [Parameter()][string]$agentPort = "1550",
+    [Parameter()][string]$infobase = "test_temp",
     [Parameter()][string]$user = "",
     [Parameter()][string]$passw = "",
     [Parameter()][string]$sqluser = "",
@@ -49,10 +49,21 @@ if ($baseFound -eq $true) {
     #блокируем РЗ
     $Base.ScheduledJobsDenied = $true
     $Base.SessionsDenied = $true
-    $WorkingProcess.UpdateInfoBase($Base)
+    $CurrentWorkingProcess.UpdateInfoBase($Base)
+
+    $connections = $CurrentWorkingProcess.GetInfoBaseConnections($Base)
+    foreach ($conn in $connections) {
+        try {
+            write-host "Reset connection " $conn.AppID "for base " $infobase
+            $CurrentWorkingProcess.Disconnect($conn) 
+        } 
+        catch {
+
+        }
+    }
 
     # Получаем список сессий кластера и прерываем их
-    foreach ($CurrCluster in $Clusters) {
+     foreach ($CurrCluster in $Clusters) {
         $Sessions = $ServerAgent.GetSessions($CurrCluster)
         if (!($Sessions.Count -eq 0))
         {
@@ -95,7 +106,7 @@ if ($baseFound -eq $true) {
         $cmd_text = "sqlcmd -S $serverSql $sqluserline $sqlpwdline -i $dir\set_online_db.sql -b -v infobase =$infobase"
         cmd.exe /c $cmd_text 
 
-        if ($fulldrop) {
+        if ($fulldrop -eq $true) {
             $cmd_text = "sqlcmd -S $serverSql $sqluserline $sqlpwdline -i $dir\remove_db.sql -b -v infobase =$infobase"
             cmd.exe /c $cmd_text 
         }
