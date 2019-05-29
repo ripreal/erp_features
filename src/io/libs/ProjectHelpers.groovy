@@ -90,7 +90,7 @@ def dropDb(server1c, agentPort, serverSql, base, admin1cUser, admin1cPwd, sqluse
     //if (returnCode != 0) { 
     //    error "error when deleting base with COM ${server1c}\\${base}. See logs above fore more information."
     //}
-    returnCode = utils.cmd("powershell -file ${env.WORKSPACE}/copy_etalon/drop_db.bat -server1c ${server1c} -agentPort ${agentPort} -serverSql ${serverSql} -infobase ${base} ${admin1cUserLine} ${admin1cPwdLine} ${sqluserLine} ${sqlpasswLine} ${fulldropLine}")
+    returnCode = utils.cmd("${env.WORKSPACE}/copy_etalon/drop_db.bat ${server1c} ${agentPort} ${serverSql} ${base} ${admin1cUserLine} ${admin1cPwdLine} ${sqluserLine} ${sqlpasswLine} ${fulldropLine}")
     if (returnCode != 0) { 
         error "error when deleting base with COM ${server1c}\\${base}. See logs above fore more information."
     }
