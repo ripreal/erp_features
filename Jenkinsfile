@@ -152,7 +152,7 @@ pipeline {
                         }
 
                         platform1cLine = ""
-                        if (platform1c == null || platform1c.isEmpty()) {
+                        if (platform1c != null && !platform1c.isEmpty()) {
                             platform1cLine = "--v8version ${platform1c}"
                         }
                         // Запускаем ADD тестирование на произвольной базе, сохранившейся в переменной testbaseConnString
