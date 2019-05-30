@@ -150,8 +150,14 @@ pipeline {
                         if (templatebasesList.size() == 0) {
                             return
                         }
+
+                        platform1cLine = ""
+                        if (platform1c == null || platform1c.isEmpty()) {
+                            platform1cLine = "--v8version ${platform1c}"
+                        }
                         // Запускаем ADD тестирование на произвольной базе, сохранившейся в переменной testbaseConnString
-                        returnCode = utils.cmd("runner vanessa --settings tools/vrunner.json --v8version ${platform1c} --ibconnection \"${testbaseConnString}\" --db-user ${admin1cUser}  --db-pwd ${admin1cPwd} --pathvanessa tools/add/bddRunner.epf")
+                        returnCode = utils.cmd("runner vanessa --settings tools/vrunner.json ${platform1cLine} --ibconnection \"${testbaseConnString}\" --db-user ${admin1cUser}  --db-pwd ${admin1cPwd} --pathvanessa tools/add/bddRunner.epf")
+
                         if (returnCode != 0) {
                             utils.raiseError("Возникла ошибка при запуске ADD на сервере ${server1c} и базе ${testbase}")
                         }
