@@ -43,7 +43,18 @@ def createDb(platform, server1c, serversql, base, cfdt, isras) {
 //
 def unlocking1cBase(connString, admin1cUsr, admin1cPwd) {
     utils = new Utils()
-    utils.cmd("runner run --execute ${env.WORKSPACE}/one_script_tools/unlockBase1C.epf --command \"-locktype unlock\" --db-user ${admin1cUsr} --db-pwd ${admin1cPwd} --ibconnection=${connString}")
+
+    admin1cUsrLine = ""
+    if (admin1cUser != null && !admin1cUser.isEmpty()) {
+        admin1cUsrLine = "--db-user ${admin1cUsr}"
+    }
+
+    admin1cPwdLine = ""
+    if (admin1cPwd != null && !admin1cPwd.isEmpty()) {
+        admin1cPwdLine = "--db-pwd ${admin1cPwd}"
+    }
+
+    utils.cmd("runner run --execute ${env.WORKSPACE}/one_script_tools/unlockBase1C.epf --command \"-locktype unlock\" ${admin1cUsrLine} ${admin1cPwdLine} --ibconnection=${connString}")
 }
 
 def getConnString(server1c, infobase, agent1cPort) {
