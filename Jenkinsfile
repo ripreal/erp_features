@@ -44,8 +44,6 @@ pipeline {
             steps {
                 timestamps {
                     script {
-                        assert storageUser
-                        //assert storagePwd
                         templatebasesList = utils.lineToArray(templatebases.toLowerCase())
                         storages1cPathList = utils.lineToArray(storages1cPath.toLowerCase())
 
