@@ -1,1 +1,0 @@
-"C:\Program Files (x86)\1Cv8\8.3.14.1630\bin\1cv8.exe" CREATEINFOBASE "Srvr=localhost:1551;Ref=test_Temptes;DBMS=MSSQLServer;DBSrvr=localhost;DBUID=sa;DBPwd=Kentdfu!1;DB=test_Temp;SQLYOffs=2000;CrSQLDB=Y;SchJobDn=Y" /Out "D:\work\1C_PR\erp_features\tsbat5oy.0il.txt" /AddInList"test_Temp"

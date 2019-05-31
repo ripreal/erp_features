@@ -1,2 +1,0 @@
-Создание информационной базы ("Srvr=localhost:1551;Ref=test_Temp;DBMS=MSSQLServer;DBSrvr=localhost;DBUID=sa;DBPwd=Kentdfu!1;DB=test_Temp;SQLYOffs=2000;CrSQLDB=Y;SchJobDn=Y;Locale = "en_US";") успешно завершено
-Информационная база "test_Temp" добавлена в список
