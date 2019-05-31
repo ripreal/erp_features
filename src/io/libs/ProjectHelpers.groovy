@@ -154,8 +154,12 @@ def updateInfobase(connString, admin1cUser, admin1cPassword, platform) {
     if (!admin1cPassword.isEmpty()) {
         admin1cPassLine = "--db-pwd ${admin1cPassword}"
     }
+    platformLine = ""
+    if (platform != null && !platform.isEmpty()) {
+        platformLine = "--v8version ${platform}"
+    }
 
-    returnCode = utils.cmd("runner updatedb --ibconnection ${connString} ${admin1cUserLine} ${admin1cPassLine} --v8version ${platform}")
+    returnCode = utils.cmd("runner updatedb --ibconnection ${connString} ${admin1cUserLine} ${admin1cPassLine} ${platformLine}")
     if (returnCode != 0) {
         utils.raiseError("Обновление базы ${connString} в режиме конфигуратора завершилось с ошибкой. Для дополнительной информации смотрите логи")
     }
