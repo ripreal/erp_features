@@ -123,7 +123,12 @@ def loadCfgFrom1CStorage(storageTCP, storageUser, storagePwd, connString, admin1
         storagePwdLine = "--storage-pwd ${storagePwd}"
     }
 
-    returnCode = utils.cmd("runner loadrepo --storage-name ${storageTCP} --storage-user ${storageUser} ${storagePwdLine} --ibconnection ${connString} --db-user ${admin1cUser} --db-pwd ${admin1cPassword} --v8version ${platform}")
+    platformLine = ""
+    if (platform != null && !platform.isEmpty()) {
+        platformLine = "--v8version ${platform}"
+    }
+
+    returnCode = utils.cmd("runner loadrepo --storage-name ${storageTCP} --storage-user ${storageUser} ${storagePwdLine} --ibconnection ${connString} --db-user ${admin1cUser} --db-pwd ${admin1cPassword} ${platformLine}")
     if (returnCode != 0) {
          utils.raiseError("Загрузка конфигурации из 1С хранилища  ${storageTCP} завершилась с ошибкой. Для подробностей смотрите логи.")
     }
