@@ -33,7 +33,7 @@ pipeline {
     }
 
     agent {
-        label "${(jenkinsAgent == null || jenkinsAgent == 'null') ? "master" : jenkinsAgent}"
+        label "${(env.jenkinsAgent == null || env.jenkinsAgent == 'null') ? "master" : env.jenkinsAgent}"
     }
     options {
         timeout(time: 8, unit: 'HOURS') 
