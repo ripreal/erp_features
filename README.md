@@ -1,6 +1,6 @@
 
 
-| :memo:        | Обратите внимание на мою новую библиотеку для интеграции с Whatsapp [whatsapp-api-client-1c](https://github.com/Yard-Team/whatsapp-api-client-1c)      |
+| :memo:        | Попробуйте мою новую библиотеку на [BASIS-API](https://basis-api.com) для интеграции с Whatsapp на [whatsapp-api-client-1c] (https://github.com/Yard-Team/whatsapp-api-client-1c)      |
 |---------------|:------------------------|
 
 ### См. оригинал статьи на Infostart https://infostart.ru/public/1070720/
